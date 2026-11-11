@@ -1,0 +1,105 @@
+{
+  "brand": "KUKI",
+  "location": "North Beach, San Francisco",
+  "currency": "USD",
+  "notes": "Calories are estimates per WHOLE cookie until recipes are finalized. Never present them per serving.",
+  "shared_kitchen_statement": "Everything is baked in a shared kitchen with milk, egg, wheat, soy, tree nuts and peanuts, so we can't guarantee any cookie is free of an allergen.",
+  "sizes": [
+    { "id": "single", "label": "Single", "count": 1, "price": 4.75 },
+    { "id": "4-pack", "label": "4-pack", "count": 4, "price": 17.5 },
+    { "id": "6-pack", "label": "6-pack", "count": 6, "price": 25.5 },
+    { "id": "12-pack", "label": "12-pack", "count": 12, "price": 48.0 }
+  ],
+  "flavors": [
+    {
+      "slug": "le-classique",
+      "name": "Le Classique",
+      "lineup": "classic",
+      "description": "Brown-butter cookie, semi-sweet chocolate chunks, flaky sea salt.",
+      "allergens": ["milk", "egg", "wheat", "soy"],
+      "calories": 540,
+      "look": "Golden-brown thick cookie, glossy melted chocolate pools, white salt flakes, crackled edges."
+    },
+    {
+      "slug": "concha-rosa",
+      "name": "Concha Rosa",
+      "lineup": "classic",
+      "description": "Vanilla sugar cookie with a pink concha-style crackle topping.",
+      "allergens": ["milk", "egg", "wheat"],
+      "calories": 520,
+      "look": "Pale golden cookie with a pastel pink sugar crust scored in the concha shell pattern."
+    },
+    {
+      "slug": "cajeta-praline",
+      "name": "Cajeta Praliné",
+      "lineup": "classic",
+      "description": "Goat-milk caramel (cajeta) swirl cookie with toasted pecan praline.",
+      "allergens": ["milk", "egg", "wheat", "tree nuts (pecan)"],
+      "calories": 610,
+      "look": "Amber caramel cookie, glossy cajeta drizzle ribbons, chopped pecans on top."
+    },
+    {
+      "slug": "fraise-creme",
+      "name": "Fraise Crème",
+      "lineup": "classic",
+      "description": "Strawberry cookie, cream-cheese frosting, freeze-dried strawberries.",
+      "allergens": ["milk", "egg", "wheat"],
+      "calories": 580,
+      "look": "Soft pink cookie base, thick white frosting swoop, red freeze-dried strawberry crumbs."
+    },
+    {
+      "slug": "chocolat-de-oaxaca",
+      "name": "Chocolat de Oaxaca",
+      "lineup": "classic",
+      "description": "Double-chocolate cookie with stone-ground cinnamon chocolate and a whisper of ancho chile.",
+      "allergens": ["milk", "egg", "wheat", "soy"],
+      "calories": 590,
+      "look": "Very dark cocoa cookie with a crinkled, cracked top, gritty dark chocolate shards, a dusting of cinnamon sugar and a few red ancho flecks."
+    },
+    {
+      "slug": "horchata-sable",
+      "name": "Horchata Sablé",
+      "lineup": "classic",
+      "description": "Buttery rice-milk sablé rolled in cinnamon sugar, finished with a horchata glaze.",
+      "allergens": ["milk", "egg", "wheat"],
+      "calories": 500,
+      "look": "Pale cream cookie fully coated in sparkly cinnamon sugar, a thin translucent white glaze drizzle in loose lines, cinnamon specks."
+    },
+    {
+      "slug": "pan-de-muerto",
+      "name": "Pan de Muerto",
+      "lineup": "rotating",
+      "description": "Orange-blossom butter cookie with an anise sugar crust and the classic bone-shaped topping.",
+      "allergens": ["milk", "egg", "wheat"],
+      "calories": 530,
+      "look": "Golden domed cookie heavily coated in coarse white sugar, with raised crossed 'bone' dough ridges and a small round knob in the center, like pan de muerto."
+    },
+    {
+      "slug": "cafe-de-olla-brulee",
+      "name": "Café de Olla Brûlée",
+      "lineup": "rotating",
+      "description": "Piloncillo-coffee cookie with a crackly brûléed sugar top and cinnamon.",
+      "allergens": ["milk", "egg", "wheat"],
+      "calories": 560,
+      "look": "Mocha-brown cookie with a glassy, amber caramelized sugar disc on top, cracked like crème brûlée, one cinnamon stick piece as garnish."
+    },
+    {
+      "slug": "mangonada",
+      "name": "Mangonada",
+      "lineup": "rotating",
+      "description": "Mango sugar cookie with a chamoy glaze and a chile-lime sugar rim.",
+      "allergens": ["milk", "egg", "wheat"],
+      "calories": 540,
+      "look": "Bright yellow-orange cookie, glossy deep red chamoy glaze pooled in the center, red chile-lime sugar around the rim, a few small mango cubes."
+    },
+    {
+      "slug": "mazapan-rose",
+      "name": "Mazapán Rosé",
+      "lineup": "rotating",
+      "description": "Rose-scented sugar cookie topped with crumbled peanut mazapán and dried rose petals.",
+      "allergens": ["milk", "egg", "wheat", "peanuts"],
+      "calories": 570,
+      "look": "Pale blush cookie with a sandy, pale-tan crumbled mazapán topping, scattered dried pink rose petals, a light powdered sugar dusting."
+    }
+  ]
+}

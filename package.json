@@ -7,10 +7,12 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "typecheck": "tsc --noEmit",
-    "smoke": "tsx scripts/smoke.ts"
+    "smoke": "tsx scripts/smoke.ts",
+    "menu": "tsx scripts/build-menu.ts"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250101.0",
+    "@types/node": "^22.20.5",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "wrangler": "^3.99.0"

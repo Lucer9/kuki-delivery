@@ -10,6 +10,15 @@ money math, signed quotes, the courier API, and status.
 Agentplace agent (Luna)  ──tools──▶  this Worker  ──▶  mock | Lalamove v3 | Uber Direct
 ```
 
+## Repo map
+
+| Path | What |
+|---|---|
+| `src/` | The Worker: routes, pricing, signed quotes, providers (mock, Uber Direct, Lalamove) |
+| `menu/menu.json` | The 10-flavor menu: source of truth for the agent |
+| `agent/instructions.md` | Paste into Agentplace. Menu section is generated: `npm run menu` |
+| `brand/` | Brand brief and Crumbl reference research |
+
 ## Endpoints
 
 | Method | Path | What it does |
