@@ -72,7 +72,7 @@ export const openapi = (server: string) => ({
                     required: ["name", "phone"],
                     properties: {
                       name: { type: "string" },
-                      phone: { type: "string", description: "With country code, e.g. +13235550123" },
+                      phone: { type: "string", description: "With country code, e.g. +14155550123" },
                     },
                   },
                   notes: { type: "string", description: "Delivery instructions for the courier, max 200 chars." },

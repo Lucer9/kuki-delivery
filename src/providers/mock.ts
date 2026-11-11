@@ -54,7 +54,7 @@ export function mockProvider(env: Env): DeliveryProvider {
       const stage = Math.min(Math.floor((Date.now() - created) / stageMs), STAGES.length - 1);
       const status: DeliveryStatus = tail.startsWith("x") && stage >= 3 ? "canceled" : STAGES[stage];
       const courier =
-        stage >= 1 ? { name: COURIERS[hash(orderId) % COURIERS.length], phone: "+13235550100" } : null;
+        stage >= 1 ? { name: COURIERS[hash(orderId) % COURIERS.length], phone: "+14155550100" } : null;
       const remaining = status === "delivered" || status === "canceled" ? 0 : (STAGES.length - 1 - stage) * (stageMs / 60_000);
       return { status, courier, eta_minutes: remaining, tracking_url: `${origin}/track/${orderId}` };
     },

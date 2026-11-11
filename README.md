@@ -45,7 +45,7 @@ Try it:
 
 ```bash
 curl -s localhost:8787/quote -H 'content-type: application/json' -d '{
-  "dropoff": { "address": "1200 N Vermont Ave, Los Angeles, CA 90029" },
+  "dropoff": { "address": "2100 Chestnut St, San Francisco, CA 94123" },
   "items": [{ "name": "Le Classique", "unit_price": 4.75, "quantity": 4 }]
 }'
 ```

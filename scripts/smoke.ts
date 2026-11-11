@@ -8,9 +8,9 @@ const env: Env = {
   COUNTRY: "US",
   QUOTE_SECRET: "test-secret",
   PICKUP_NAME: "Test Bakery",
-  PICKUP_ADDRESS: "3900 W Sunset Blvd, Los Angeles, CA 90029",
-  PICKUP_LAT: "34.0912",
-  PICKUP_LNG: "-118.2786",
+  PICKUP_ADDRESS: "1600 Stockton St, San Francisco, CA 94133",
+  PICKUP_LAT: "37.8008",
+  PICKUP_LNG: "-122.4091",
   PICKUP_PHONE: "+13235550100",
   MOCK_MINUTES_PER_STAGE: "0.001", // ~60 ms per stage
 };
@@ -36,7 +36,7 @@ const items = [
   { name: "Le Classique", unit_price: 4.75, quantity: 4 },
   { name: "Concha Rosa", unit_price: 4.75, quantity: 2 },
 ];
-const dropoff = { address: "1200 N Vermont Ave, Los Angeles, CA 90029" };
+const dropoff = { address: "2100 Chestnut St, San Francisco, CA 94123" };
 
 const q = await call("POST", "/quote", { dropoff, items });
 check("quote 200", q.status === 200, q);
@@ -50,7 +50,7 @@ check("tampered quote rejected", t.status === 400 && t.data.error.code === "inva
 const badPhone = await call("POST", "/order", { quote_id: q.data.quote_id, customer: { name: "Ana", phone: "5511" } });
 check("bad phone rejected", badPhone.data.error?.code === "invalid_phone", badPhone);
 
-const far = await call("POST", "/quote", { dropoff: { address: "Somewhere far away, Fresno CA" }, items });
+const far = await call("POST", "/quote", { dropoff: { address: "Somewhere far away, Sacramento CA" }, items });
 check("out of range → 422", far.status === 422 && far.data.error.code === "out_of_range", far);
 
 const empty = await call("POST", "/quote", { dropoff, items: [] });

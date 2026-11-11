@@ -8,12 +8,12 @@ PROVIDER = "mock"
 # US: use "uber". Lalamove does not operate in the US.
 CURRENCY = "USD"
 COUNTRY = "US"
-# The bakery (pickup point). Placeholder shop location in Los Angeles; change to your city.
+# The bakery (pickup point). Placeholder in North Beach, San Francisco.
 PICKUP_NAME = "KUKI"
-PICKUP_ADDRESS = "3900 W Sunset Blvd, Los Angeles, CA 90029"
-PICKUP_LAT = "34.0912"
-PICKUP_LNG = "-118.2786"
-PICKUP_PHONE = "+13235550100"
+PICKUP_ADDRESS = "1600 Stockton St, San Francisco, CA 94133"
+PICKUP_LAT = "37.8008"
+PICKUP_LNG = "-122.4091"
+PICKUP_PHONE = "+14155550100"
 # Mock only: real minutes per delivery stage (keep small for demos).
 MOCK_MINUTES_PER_STAGE = "1"
 LALAMOVE_BASE_URL = "https://rest.sandbox.lalamove.com"

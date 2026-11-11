@@ -92,7 +92,7 @@ async function order(req: Request, env: Env) {
   const c = b.customer as { name?: unknown; phone?: unknown } | undefined;
   if (!c || typeof c.name !== "string" || !c.name.trim()) throw new ServiceError(400, "invalid_customer", "I need the customer's name.");
   if (typeof c.phone !== "string" || !/^\+\d{10,15}$/.test(c.phone.replace(/[\s-]/g, ""))) {
-    throw new ServiceError(400, "invalid_phone", "I need a phone number with country code, like +1 323 555 0123.");
+    throw new ServiceError(400, "invalid_phone", "I need a phone number with country code, like +1 415 555 0123.");
   }
   const origin = new URL(req.url).origin;
   const o = await providerFor(env, q.provider).createOrder({
