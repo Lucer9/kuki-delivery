@@ -1,0 +1,13 @@
+{
+  "name": "kuki-renders",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "render": "node render.mjs",
+    "draft": "node render.mjs --draft"
+  },
+  "dependencies": {
+    "@fontsource/bodoni-moda": "^5.3.0",
+    "three": "^0.187.0"
+  }
+}

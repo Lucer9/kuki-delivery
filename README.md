@@ -18,6 +18,8 @@ Agentplace agent (Luna)  ──tools──▶  this Worker  ──▶  mock | La
 | `menu/menu.json` | The 10-flavor menu: source of truth for the agent |
 | `agent/instructions.md` | Paste into Agentplace. Menu section is generated: `npm run menu` |
 | `brand/` | Brand brief and Crumbl reference research |
+| `brand/renders/` | 3D renders (WebP): all 10 cookies (top-down + hero), the Franco-Mexican box, the toile pattern |
+| `renders-src/` | Procedural Three.js scenes that generate the renders: `cd renders-src && npm install && node render.mjs` (writes full-size PNGs to `/renders/`, git-ignored) |
 
 ## Endpoints
 

@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>KUKI contact sheet</title>
+<style>
+@font-face { font-family: "Bodoni Moda"; font-weight: 700; src: url(/node_modules/@fontsource/bodoni-moda/files/bodoni-moda-latin-700-normal.woff2) format("woff2"); }
+@font-face { font-family: "Bodoni Moda"; font-weight: 500; src: url(/node_modules/@fontsource/bodoni-moda/files/bodoni-moda-latin-500-normal.woff2) format("woff2"); }
+@font-face { font-family: "Bodoni Moda"; font-weight: 500; font-style: italic; src: url(/node_modules/@fontsource/bodoni-moda/files/bodoni-moda-latin-500-italic.woff2) format("woff2"); }
+* { box-sizing: border-box; }
+body { margin: 0; width: 2400px; background: #FFF6E5; color: #3B2418; font-family: "Bodoni Moda", serif; padding: 70px 70px 80px; }
+header { display: flex; align-items: baseline; justify-content: space-between; border-bottom: 3px solid #3B2418; padding-bottom: 22px; margin-bottom: 30px; }
+h1 { margin: 0; font-size: 120px; line-height: 0.9; letter-spacing: 0.04em; color: #E8412C; font-weight: 700; }
+header p { margin: 0; font-style: italic; font-size: 32px; }
+h2 { font-weight: 700; font-size: 44px; margin: 56px 0 4px; color: #E8412C; letter-spacing: 0.02em; }
+h3 { font-style: italic; font-weight: 500; font-size: 26px; margin: 22px 0 14px; opacity: 0.8; }
+.row { display: grid; gap: 22px; }
+.c6 { grid-template-columns: repeat(6, 1fr); } .c4 { grid-template-columns: repeat(4, 1fr); }
+figure { margin: 0; }
+figure img { width: 100%; display: block; border-radius: 14px; }
+.aerial img { background-color: #fff; background-image: linear-gradient(45deg, #efe6d4 25%, transparent 25%, transparent 75%, #efe6d4 75%), linear-gradient(45deg, #efe6d4 25%, transparent 25%, transparent 75%, #efe6d4 75%); background-size: 28px 28px; background-position: 0 0, 14px 14px; }
+figcaption { font-size: 19px; padding-top: 8px; }
+figcaption span { display: block; font-style: italic; opacity: 0.6; font-size: 15px; }
+.box { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.box2 { display: grid; grid-template-columns: 1350px 1fr; gap: 22px; margin-top: 22px; align-items: start; }
+.sw { display: flex; gap: 14px; margin-top: 44px; font-size: 20px; }
+.sw div { flex: 1; height: 70px; border-radius: 12px; display: flex; align-items: flex-end; padding: 8px 12px; border: 1px solid rgba(59,36,24,.15); }
+</style>
+</head>
+<body>
+<header><h1>KUKI</h1><p>3D product renders · procedural Three.js · contact sheet</p></header>
+<h2>Classics</h2>
+<h3>Aerial — transparent PNG, 1600×1600 (checkerboard shows alpha)</h3>
+<div class="row c6 aerial" id="classic-aerial"></div>
+<h3>Hero — 3/4 angle on brand colour, 1600×2000</h3>
+<div class="row c6" id="classic-hero"></div>
+<h2>Rotating</h2>
+<h3>Aerial</h3>
+<div class="row c4 aerial" id="rotating-aerial" style="width: 66%"></div>
+<h3>Hero</h3>
+<div class="row c4" id="rotating-hero" style="width: 66%"></div>
+<h2>Box — Franco-Mexican toile</h2>
+<h3>Closed with ribbon and open 4-pack, 2400×1800</h3>
+<div class="box">
+  <figure><img src="/renders/box-closed.png"><figcaption>Closed box<span>box-closed.png</span></figcaption></figure>
+  <figure><img src="/renders/box-4pack.png"><figcaption>Open 4-pack<span>box-4pack.png</span></figcaption></figure>
+</div>
+<div class="box2">
+  <figure><img src="/renders/box-pattern.png"><figcaption>Toile repeat, tileable, 2000×2000<span>box-pattern.png</span></figcaption></figure>
+  <figure><img src="/renders/box-4pack-v1.png" onerror="this.parentNode.remove()"><figcaption>Previous box, for reference<span>box-4pack-v1.png</span></figcaption></figure>
+</div>
+<div class="sw">
+  <div style="background:#FFE27A">beurre #FFE27A</div><div style="background:#E8412C;color:#FFF6E5">tomate #E8412C</div>
+  <div style="background:#FFF6E5">crème #FFF6E5</div><div style="background:#3B2418;color:#FFF6E5">cacao #3B2418</div><div style="background:#B7D59A">pistache #B7D59A</div>
+</div>
+<script>
+const L = {
+  classic: [['le-classique', 'Le Classique'], ['concha-rosa', 'Concha Rosa'], ['cajeta-praline', 'Cajeta Praliné'], ['fraise-creme', 'Fraise Crème'], ['chocolat-de-oaxaca', 'Chocolat de Oaxaca'], ['horchata-sable', 'Horchata Sablé']],
+  rotating: [['pan-de-muerto', 'Pan de Muerto'], ['cafe-de-olla-brulee', 'Café de Olla Brûlée'], ['mangonada', 'Mangonada'], ['mazapan-rose', 'Mazapán Rosé']],
+};
+for (const [line, list] of Object.entries(L)) for (const kind of ['aerial', 'hero']) {
+  const row = document.getElementById(`${line}-${kind}`);
+  for (const [slug, name] of list) row.insertAdjacentHTML('beforeend', `<figure><img src="/renders/${slug}-${kind}.png"><figcaption>${name}<span>${slug}-${kind}.png</span></figcaption></figure>`);
+}
+Promise.all([...document.images].map((i) => i.decode().catch(() => {}))).then(() => document.fonts.ready).then(() => { window.SHEET_READY = true; });
+</script>
+</body>
+</html>
