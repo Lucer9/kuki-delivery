@@ -5,7 +5,7 @@
 // enabled, Uber moves the delivery through its statuses on its own.
 import type { DeliveryProvider, DeliveryStatus, Env, ProviderStatus } from "../types";
 import { ServiceError } from "../types";
-import { geocode } from "../geocode";
+import { geocode, type Geo } from "../geocode";
 
 const STATUS_MAP: Record<string, DeliveryStatus> = {
   pending: "finding_courier",
@@ -21,8 +21,13 @@ const STATUS_MAP: Record<string, DeliveryStatus> = {
 // isolate doesn't fetch its own (Uber rate-limits the token endpoint).
 let cached: { token: string; exp: number } | null = null;
 
-/** Uber wants addresses as a JSON *string*. */
-const uberAddress = (line: string) => JSON.stringify({ street_address: [line], country: "MX" });
+/** Uber wants addresses as a JSON *string*, ideally structured. */
+const uberAddress = (line: string, g: Geo) =>
+  JSON.stringify(
+    g.street && g.city && g.state && g.zip
+      ? { street_address: [g.street], city: g.city, state: g.state, zip_code: g.zip, country: g.country }
+      : { street_address: [line], country: g.country },
+  );
 
 const minutesUntil = (iso?: string) =>
   iso ? Math.max(0, Math.round((Date.parse(iso) - Date.now()) / 60_000)) : null;
@@ -66,30 +71,37 @@ export function uberProvider(env: Env): DeliveryProvider {
         throw new ServiceError(422, "out_of_range", "That address is outside our delivery area.");
       }
       if (json.code === "invalid_params" && /address/i.test(json.message ?? "")) {
-        throw new ServiceError(422, "address_not_found", "I couldn't find that address. Could you add the colonia and postal code?");
+        throw new ServiceError(422, "address_not_found", "I couldn't find that address. Could you add the city and ZIP code?");
       }
       throw new ServiceError(502, "provider_error", "The delivery service didn't respond as expected. Please try again.");
     }
     return json;
   }
 
-  const pickup = () => ({
-    pickup_address: uberAddress(env.PICKUP_ADDRESS),
-    pickup_latitude: Number(env.PICKUP_LAT),
-    pickup_longitude: Number(env.PICKUP_LNG),
-  });
+  let pickupGeo: Geo | null = null;
+  const pickup = async () => {
+    pickupGeo ??= await geocode(
+      { address: env.PICKUP_ADDRESS, lat: Number(env.PICKUP_LAT), lng: Number(env.PICKUP_LNG) },
+      env.COUNTRY,
+    );
+    return {
+      pickup_address: uberAddress(env.PICKUP_ADDRESS, pickupGeo),
+      pickup_latitude: Number(env.PICKUP_LAT),
+      pickup_longitude: Number(env.PICKUP_LNG),
+    };
+  };
 
   return {
     name: "uber",
 
     async quote(dropoff) {
-      const c = await geocode(dropoff);
+      const c = await geocode(dropoff, env.COUNTRY);
       const q = await call<{ id: string; fee: number; currency: string; expires: string; duration?: number }>(
         "POST",
         "/delivery_quotes",
         {
-          ...pickup(),
-          dropoff_address: uberAddress(dropoff.address),
+          ...(await pickup()),
+          dropoff_address: uberAddress(dropoff.address, c),
           dropoff_latitude: c.lat,
           dropoff_longitude: c.lng,
         },
@@ -99,19 +111,20 @@ export function uberProvider(env: Env): DeliveryProvider {
         currency: q.currency.toUpperCase(),
         eta_minutes: q.duration ?? null,
         expires_at: Date.parse(q.expires),
-        ref: { quoteId: q.id, lat: String(c.lat), lng: String(c.lng) },
+        ref: { quoteId: q.id, geo: JSON.stringify(c) },
       };
     },
 
     async createOrder({ ref, dropoff, customer, items, notes }) {
+      const geo = JSON.parse(ref.geo) as Geo;
       const d = await call<{ id: string; tracking_url?: string }>("POST", "/deliveries", {
         quote_id: ref.quoteId,
-        ...pickup(),
+        ...(await pickup()),
         pickup_name: env.PICKUP_NAME,
         pickup_phone_number: env.PICKUP_PHONE,
-        dropoff_address: uberAddress(dropoff.address),
-        dropoff_latitude: Number(ref.lat),
-        dropoff_longitude: Number(ref.lng),
+        dropoff_address: uberAddress(dropoff.address, geo),
+        dropoff_latitude: geo.lat,
+        dropoff_longitude: geo.lng,
         dropoff_name: customer.name,
         dropoff_phone_number: customer.phone,
         dropoff_notes: notes ?? "",

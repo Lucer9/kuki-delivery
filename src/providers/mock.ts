@@ -1,7 +1,7 @@
 // A stateless fake courier service for demos and tests.
 // Status advances with time, computed from the timestamp in the order ID.
 // Magic addresses help demo error handling in the chat:
-//   contains "lejos" / "far"      → out of delivery range
+//   contains "far away"           → out of delivery range
 //   contains "cancel"             → the delivery gets canceled after pickup
 import type { Address, DeliveryProvider, DeliveryStatus, Env, ProviderStatus } from "../types";
 import { ServiceError } from "../types";
@@ -26,12 +26,12 @@ export function mockProvider(env: Env): DeliveryProvider {
 
     async quote(dropoff: Address) {
       const a = dropoff.address.toLowerCase();
-      if (a.includes("lejos") || a.includes("far")) {
+      if (a.includes("far away")) {
         throw new ServiceError(422, "out_of_range", "That address is outside our delivery area.");
       }
       const km = fakeKm(dropoff.address);
       return {
-        fee: Math.round((35 + 8 * km) * 100), // 35 MXN base + 8 MXN/km
+        fee: Math.round((2.99 + 0.6 * km) * 100), // $2.99 base + $0.60/km
         currency: env.CURRENCY,
         eta_minutes: Math.round(15 + 3 * km),
         expires_at: Date.now() + 5 * 60_000,
@@ -54,7 +54,7 @@ export function mockProvider(env: Env): DeliveryProvider {
       const stage = Math.min(Math.floor((Date.now() - created) / stageMs), STAGES.length - 1);
       const status: DeliveryStatus = tail.startsWith("x") && stage >= 3 ? "canceled" : STAGES[stage];
       const courier =
-        stage >= 1 ? { name: COURIERS[hash(orderId) % COURIERS.length], phone: "+525500000000" } : null;
+        stage >= 1 ? { name: COURIERS[hash(orderId) % COURIERS.length], phone: "+13235550100" } : null;
       const remaining = status === "delivered" || status === "canceled" ? 0 : (STAGES.length - 1 - stage) * (stageMs / 60_000);
       return { status, courier, eta_minutes: remaining, tracking_url: `${origin}/track/${orderId}` };
     },

@@ -30,7 +30,7 @@ Errors always come back as `{ error: { code, message } }`. The message is safe t
 - **Quotes are signed tokens.** The `quote_id` is an HMAC-signed payload (price, cart, provider refs, expiry), so there's no database between quote and order, and the price can't be edited before ordering.
 - **Quotes expire.** Courier prices are only held for a few minutes. An expired quote returns `410 quote_expired` so the agent can refresh the price and confirm it with the customer.
 - **Provider interface.** `src/types.ts → DeliveryProvider`. The mock, Lalamove and Uber Direct adapters implement it. Order IDs carry a provider prefix (`mock_`, `lm_`, `ub_`), so status checks keep working after switching providers.
-- **The mock is stateless.** Status advances with time, computed from the timestamp in the order ID. Addresses containing `lejos`/`far` are out of range, and ones containing `cancel` get canceled after pickup, which is useful for demoing error handling in chat.
+- **The mock is stateless.** Status advances with time, computed from the timestamp in the order ID. Addresses containing `far away` are out of range, and ones containing `cancel` get canceled after pickup, which is useful for demoing error handling in chat.
 
 ## Run it
 
@@ -45,8 +45,8 @@ Try it:
 
 ```bash
 curl -s localhost:8787/quote -H 'content-type: application/json' -d '{
-  "dropoff": { "address": "Calle Durango 200, Roma Nte., 06700 CDMX" },
-  "items": [{ "name": "Chocolate Chip", "unit_price": 65, "quantity": 4 }]
+  "dropoff": { "address": "1200 N Vermont Ave, Los Angeles, CA 90029" },
+  "items": [{ "name": "Le Classique", "unit_price": 4.75, "quantity": 4 }]
 }'
 ```
 
@@ -60,7 +60,9 @@ npm run deploy
 
 ## Switch to Lalamove
 
-1. Get sandbox keys from the Lalamove partner portal (Mexico market).
+Lalamove does not operate in the US. The adapter is kept for LATAM/Asia markets.
+
+1. Get sandbox keys from the Lalamove partner portal and set `LALAMOVE_MARKET` and `COUNTRY` to match.
 2. `npx wrangler secret put LALAMOVE_API_KEY` and `LALAMOVE_API_SECRET`.
 3. Set `PROVIDER = "lalamove"` in `wrangler.toml` and deploy.
 

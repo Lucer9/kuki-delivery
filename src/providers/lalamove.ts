@@ -26,6 +26,7 @@ const STATUS_MAP: Record<string, DeliveryStatus> = {
 
 export function lalamoveProvider(env: Env): DeliveryProvider {
   const base = env.LALAMOVE_BASE_URL ?? "https://rest.sandbox.lalamove.com";
+  // Lalamove does not operate in the US; it is kept for LATAM/Asia markets.
   const market = env.LALAMOVE_MARKET ?? "MX";
 
   async function call<T>(method: "GET" | "POST", path: string, data?: unknown): Promise<T> {
@@ -72,7 +73,7 @@ export function lalamoveProvider(env: Env): DeliveryProvider {
         language: "es_MX",
         stops: [
           { coordinates: { lat: env.PICKUP_LAT, lng: env.PICKUP_LNG }, address: env.PICKUP_ADDRESS },
-          { coordinates: await geocode(dropoff).then((c) => ({ lat: String(c.lat), lng: String(c.lng) })), address: dropoff.address },
+          { coordinates: await geocode(dropoff, env.COUNTRY).then((c) => ({ lat: String(c.lat), lng: String(c.lng) })), address: dropoff.address },
         ],
       });
       return {

@@ -1,6 +1,8 @@
 export interface Env {
   PROVIDER: ProviderName;
   CURRENCY: string;
+  /** ISO country code for geocoding and courier APIs, e.g. "US". */
+  COUNTRY: string;
   QUOTE_SECRET: string;
   SERVICE_TOKEN?: string;
   PICKUP_NAME: string;
@@ -31,7 +33,7 @@ export interface Address {
 
 export interface Customer {
   name: string;
-  phone: string; // E.164, e.g. +5255...
+  phone: string; // E.164, e.g. +13235550123
 }
 
 /** One normalized status set, whatever the provider reports. */

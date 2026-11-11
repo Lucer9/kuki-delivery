@@ -4,13 +4,14 @@ import type { Env } from "../src/types";
 
 const env: Env = {
   PROVIDER: "mock",
-  CURRENCY: "MXN",
+  CURRENCY: "USD",
+  COUNTRY: "US",
   QUOTE_SECRET: "test-secret",
   PICKUP_NAME: "Test Bakery",
-  PICKUP_ADDRESS: "Av. Álvaro Obregón 120, Roma Nte., CDMX",
-  PICKUP_LAT: "19.4180",
-  PICKUP_LNG: "-99.1610",
-  PICKUP_PHONE: "+525512345678",
+  PICKUP_ADDRESS: "3900 W Sunset Blvd, Los Angeles, CA 90029",
+  PICKUP_LAT: "34.0912",
+  PICKUP_LNG: "-118.2786",
+  PICKUP_PHONE: "+13235550100",
   MOCK_MINUTES_PER_STAGE: "0.001", // ~60 ms per stage
 };
 
@@ -32,30 +33,30 @@ function check(name: string, ok: boolean, detail?: unknown) {
 }
 
 const items = [
-  { name: "Chocolate Chip", unit_price: 65, quantity: 4 },
-  { name: "Pink Sugar", unit_price: 70.5, quantity: 2 },
+  { name: "Le Classique", unit_price: 4.75, quantity: 4 },
+  { name: "Concha Rosa", unit_price: 4.75, quantity: 2 },
 ];
-const dropoff = { address: "Calle Durango 200, Roma Nte., 06700 CDMX" };
+const dropoff = { address: "1200 N Vermont Ave, Los Angeles, CA 90029" };
 
 const q = await call("POST", "/quote", { dropoff, items });
 check("quote 200", q.status === 200, q);
-check("subtotal computed in code", q.data.subtotal === 401, q.data);
+check("subtotal computed in code", q.data.subtotal === 28.5, q.data);
 check("total = subtotal + fee", Math.abs(q.data.total - (q.data.subtotal + q.data.delivery_fee)) < 0.001, q.data);
 
 const tampered = q.data.quote_id.replace(/^./, (c: string) => (c === "a" ? "b" : "a"));
-const t = await call("POST", "/order", { quote_id: tampered, customer: { name: "Ana", phone: "+525511112222" } });
+const t = await call("POST", "/order", { quote_id: tampered, customer: { name: "Ana", phone: "+13235550111" } });
 check("tampered quote rejected", t.status === 400 && t.data.error.code === "invalid_quote", t);
 
 const badPhone = await call("POST", "/order", { quote_id: q.data.quote_id, customer: { name: "Ana", phone: "5511" } });
 check("bad phone rejected", badPhone.data.error?.code === "invalid_phone", badPhone);
 
-const far = await call("POST", "/quote", { dropoff: { address: "Muy lejos, Monterrey NL" }, items });
+const far = await call("POST", "/quote", { dropoff: { address: "Somewhere far away, Fresno CA" }, items });
 check("out of range → 422", far.status === 422 && far.data.error.code === "out_of_range", far);
 
 const empty = await call("POST", "/quote", { dropoff, items: [] });
 check("empty cart rejected", empty.data.error?.code === "empty_cart", empty);
 
-const o = await call("POST", "/order", { quote_id: q.data.quote_id, customer: { name: "Ana", phone: "+52 55 1111 2222" } });
+const o = await call("POST", "/order", { quote_id: q.data.quote_id, customer: { name: "Ana", phone: "+1 323 555 0111" } });
 check("order 201", o.status === 201 && o.data.order_id.startsWith("mock_"), o);
 
 const s1 = await call("GET", `/order/${o.data.order_id}`);

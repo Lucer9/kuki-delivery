@@ -3,7 +3,7 @@ import { ServiceError } from "./types";
 
 export interface CartItem {
   name: string;
-  unit_price: number; // major units, e.g. 65.00 MXN
+  unit_price: number; // major units, e.g. 4.75 USD
   quantity: number;
 }
 
@@ -41,5 +41,5 @@ export function priceCart(items: unknown): { lines: PricedLine[]; subtotal: numb
 export const toMajor = (minor: number) => Math.round(minor) / 100;
 
 export function formatMoney(minor: number, currency: string): string {
-  return new Intl.NumberFormat("es-MX", { style: "currency", currency }).format(minor / 100);
+  return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(minor / 100);
 }

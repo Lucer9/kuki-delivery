@@ -27,7 +27,7 @@ export const openapi = (server: string) => ({
                     type: "object",
                     required: ["address"],
                     properties: {
-                      address: { type: "string", description: "Full address: street, number, colonia, postal code, city." },
+                      address: { type: "string", description: "Full US address: street and number, city, state, ZIP code." },
                       lat: { type: "number" },
                       lng: { type: "number" },
                     },
@@ -39,7 +39,7 @@ export const openapi = (server: string) => ({
                       required: ["name", "unit_price", "quantity"],
                       properties: {
                         name: { type: "string" },
-                        unit_price: { type: "number", description: "Price per unit from the menu, in MXN." },
+                        unit_price: { type: "number", description: "Price per unit from the menu, in USD." },
                         quantity: { type: "integer", minimum: 1 },
                       },
                     },
@@ -72,7 +72,7 @@ export const openapi = (server: string) => ({
                     required: ["name", "phone"],
                     properties: {
                       name: { type: "string" },
-                      phone: { type: "string", description: "With country code, e.g. +525512345678" },
+                      phone: { type: "string", description: "With country code, e.g. +13235550123" },
                     },
                   },
                   notes: { type: "string", description: "Delivery instructions for the courier, max 200 chars." },
