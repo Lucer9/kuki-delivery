@@ -2,8 +2,9 @@
 // Docs: https://developers.lalamove.com/
 // Auth: "Authorization: hmac <key>:<ts>:<sig>", sig = HMAC-SHA256 hex of
 //   `${ts}\r\n${METHOD}\r\n${path}\r\n\r\n${body}` with the API secret.
-import type { Address, DeliveryProvider, DeliveryStatus, Env, ProviderStatus } from "../types";
+import type { DeliveryProvider, DeliveryStatus, Env, ProviderStatus } from "../types";
 import { ServiceError } from "../types";
+import { geocode } from "../geocode";
 
 const enc = new TextEncoder();
 
@@ -57,20 +58,6 @@ export function lalamoveProvider(env: Env): DeliveryProvider {
     return json.data;
   }
 
-  /** Lalamove needs coordinates. Uses the caller's lat/lng, else geocodes the address. */
-  async function coords(a: Address): Promise<{ lat: string; lng: string }> {
-    if (a.lat !== undefined && a.lng !== undefined) return { lat: String(a.lat), lng: String(a.lng) };
-    // Demo geocoder. For production, use a paid geocoder (Google, Mapbox) and an
-    // address-autocomplete UI so the customer confirms the exact location.
-    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=mx&q=${encodeURIComponent(a.address)}`;
-    const res = await fetch(url, { headers: { "User-Agent": "delivery-service-demo/0.1" } });
-    const hits = (await res.json().catch(() => [])) as { lat: string; lon: string }[];
-    if (!hits[0]) {
-      throw new ServiceError(422, "address_not_found", "I couldn't find that address. Could you add the colonia and postal code?");
-    }
-    return { lat: hits[0].lat, lng: hits[0].lon };
-  }
-
   return {
     name: "lalamove",
 
@@ -85,7 +72,7 @@ export function lalamoveProvider(env: Env): DeliveryProvider {
         language: "es_MX",
         stops: [
           { coordinates: { lat: env.PICKUP_LAT, lng: env.PICKUP_LNG }, address: env.PICKUP_ADDRESS },
-          { coordinates: await coords(dropoff), address: dropoff.address },
+          { coordinates: await geocode(dropoff).then((c) => ({ lat: String(c.lat), lng: String(c.lng) })), address: dropoff.address },
         ],
       });
       return {

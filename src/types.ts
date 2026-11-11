@@ -1,5 +1,5 @@
 export interface Env {
-  PROVIDER: "mock" | "lalamove";
+  PROVIDER: ProviderName;
   CURRENCY: string;
   QUOTE_SECRET: string;
   SERVICE_TOKEN?: string;
@@ -14,7 +14,14 @@ export interface Env {
   LALAMOVE_SERVICE_TYPE?: string;
   LALAMOVE_API_KEY?: string;
   LALAMOVE_API_SECRET?: string;
+  UBER_CUSTOMER_ID?: string;
+  UBER_CLIENT_ID?: string;
+  UBER_CLIENT_SECRET?: string;
+  /** "true" adds Uber's robo courier to test deliveries so status moves on its own. */
+  UBER_ROBO_COURIER?: string;
 }
+
+export type ProviderName = "mock" | "lalamove" | "uber";
 
 export interface Address {
   address: string;
@@ -60,12 +67,13 @@ export interface ProviderStatus {
 
 /** Each delivery API implements this. The routes never touch a provider directly. */
 export interface DeliveryProvider {
-  name: "mock" | "lalamove";
+  name: ProviderName;
   quote(dropoff: Address): Promise<ProviderQuote>;
   createOrder(input: {
     ref: Record<string, string>;
     dropoff: Address;
     customer: Customer;
+    items: { name: string; quantity: number }[];
     notes?: string;
     origin: string;
   }): Promise<ProviderOrder>;

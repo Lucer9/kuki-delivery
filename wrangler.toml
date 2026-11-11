@@ -3,7 +3,7 @@ main = "src/index.ts"
 compatibility_date = "2025-01-01"
 
 [vars]
-# "mock" works with no keys. Switch to "lalamove" once sandbox keys arrive.
+# "mock" works with no keys. "lalamove" or "uber" once you have test credentials.
 PROVIDER = "mock"
 CURRENCY = "MXN"
 # The bakery (pickup point). Fictional shop in Mexico City.
@@ -17,9 +17,12 @@ MOCK_MINUTES_PER_STAGE = "1"
 LALAMOVE_BASE_URL = "https://rest.sandbox.lalamove.com"
 LALAMOVE_MARKET = "MX"
 LALAMOVE_SERVICE_TYPE = "MOTORCYCLE"
+# Uber Direct test mode: robo courier moves deliveries through statuses automatically.
+UBER_ROBO_COURIER = "true"
 
 # Secrets (set with `npx wrangler secret put NAME`, or in .dev.vars locally):
 #   QUOTE_SECRET          signs quote tokens (required)
 #   SERVICE_TOKEN         optional bearer token the agent must send
 #   LALAMOVE_API_KEY
 #   LALAMOVE_API_SECRET
+#   UBER_CUSTOMER_ID, UBER_CLIENT_ID, UBER_CLIENT_SECRET  (direct.uber.com → Developer)

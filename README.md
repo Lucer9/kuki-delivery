@@ -7,7 +7,7 @@ The menu lives in the agent. This service handles everything that needs code:
 money math, signed quotes, the courier API, and status.
 
 ```
-Agentplace agent (Luna)  ──tools──▶  this Worker  ──▶  mock provider | Lalamove v3 (sandbox)
+Agentplace agent (Luna)  ──tools──▶  this Worker  ──▶  mock | Lalamove v3 | Uber Direct
 ```
 
 ## Endpoints
@@ -29,7 +29,7 @@ Errors always come back as `{ error: { code, message } }`. The message is safe t
 - **Totals come from code, not the model.** The agent sends items and unit prices; the service does the math and returns a ready-to-say `summary`.
 - **Quotes are signed tokens.** The `quote_id` is an HMAC-signed payload (price, cart, provider refs, expiry), so there's no database between quote and order, and the price can't be edited before ordering.
 - **Quotes expire.** Courier prices are only held for a few minutes. An expired quote returns `410 quote_expired` so the agent can refresh the price and confirm it with the customer.
-- **Provider interface.** `src/types.ts → DeliveryProvider`. The mock and Lalamove adapters implement it; Uber Direct would be a third file. Order IDs carry a provider prefix (`mock_`, `lm_`).
+- **Provider interface.** `src/types.ts → DeliveryProvider`. The mock, Lalamove and Uber Direct adapters implement it. Order IDs carry a provider prefix (`mock_`, `lm_`, `ub_`), so status checks keep working after switching providers.
 - **The mock is stateless.** Status advances with time, computed from the timestamp in the order ID. Addresses containing `lejos`/`far` are out of range, and ones containing `cancel` get canceled after pickup, which is useful for demoing error handling in chat.
 
 ## Run it
@@ -65,6 +65,14 @@ npm run deploy
 3. Set `PROVIDER = "lalamove"` in `wrangler.toml` and deploy.
 
 Lalamove needs coordinates. The service uses `lat`/`lng` if the agent sends them, otherwise it geocodes the address with OpenStreetMap Nominatim (fine for a demo, not for production).
+
+## Switch to Uber Direct
+
+1. Sign up at direct.uber.com and open the Developer tab to get the Customer ID, Client ID and Client Secret (test credentials).
+2. `npx wrangler secret put UBER_CUSTOMER_ID`, `UBER_CLIENT_ID`, `UBER_CLIENT_SECRET`.
+3. Set `PROVIDER = "uber"` and deploy. With `UBER_ROBO_COURIER = "true"`, Uber's test courier moves each delivery through its statuses on its own.
+
+Lalamove and Uber adapters are written against their public docs but haven't been run against live test accounts yet.
 
 ## What I'd change for production
 

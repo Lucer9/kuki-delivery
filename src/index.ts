@@ -1,6 +1,7 @@
 import { formatMoney, priceCart, toMajor, type PricedLine } from "./pricing";
 import { lalamoveProvider } from "./providers/lalamove";
 import { mockProvider } from "./providers/mock";
+import { uberProvider } from "./providers/uber";
 import { openapi } from "./openapi";
 import { sign, verify } from "./token";
 import { ServiceError, type Address, type DeliveryProvider, type Env } from "./types";
@@ -26,6 +27,7 @@ const json = (data: unknown, status = 200) =>
 function providerFor(env: Env, name: string = env.PROVIDER): DeliveryProvider {
   if (name === "lalamove") return lalamoveProvider(env);
   if (name === "mock") return mockProvider(env);
+  if (name === "uber") return uberProvider(env);
   throw new ServiceError(500, "provider_not_configured", `Unknown provider "${name}".`);
 }
 
@@ -33,6 +35,7 @@ function providerFor(env: Env, name: string = env.PROVIDER): DeliveryProvider {
 function providerForOrder(env: Env, id: string): DeliveryProvider {
   if (id.startsWith("lm_")) return providerFor(env, "lalamove");
   if (id.startsWith("mock_")) return providerFor(env, "mock");
+  if (id.startsWith("ub_")) return providerFor(env, "uber");
   throw new ServiceError(404, "order_not_found", "I couldn't find that order. Could you check the order ID?");
 }
 
@@ -96,6 +99,7 @@ async function order(req: Request, env: Env) {
     ref: q.ref,
     dropoff: q.dropoff,
     customer: { name: c.name.trim(), phone: c.phone.replace(/[\s-]/g, "") },
+    items: q.lines.map((l) => ({ name: l.name, quantity: l.quantity })),
     notes: typeof b.notes === "string" ? b.notes.slice(0, 200) : undefined,
     origin,
   });
