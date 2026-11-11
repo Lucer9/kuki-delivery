@@ -1,0 +1,25 @@
+name = "delivery-service"
+main = "src/index.ts"
+compatibility_date = "2025-01-01"
+
+[vars]
+# "mock" works with no keys. Switch to "lalamove" once sandbox keys arrive.
+PROVIDER = "mock"
+CURRENCY = "MXN"
+# The bakery (pickup point). Fictional shop in Mexico City.
+PICKUP_NAME = "Migaja Cookie Co."
+PICKUP_ADDRESS = "Av. Álvaro Obregón 120, Roma Nte., Cuauhtémoc, 06700 Ciudad de México, CDMX"
+PICKUP_LAT = "19.4180"
+PICKUP_LNG = "-99.1610"
+PICKUP_PHONE = "+525512345678"
+# Mock only: real minutes per delivery stage (keep small for demos).
+MOCK_MINUTES_PER_STAGE = "1"
+LALAMOVE_BASE_URL = "https://rest.sandbox.lalamove.com"
+LALAMOVE_MARKET = "MX"
+LALAMOVE_SERVICE_TYPE = "MOTORCYCLE"
+
+# Secrets (set with `npx wrangler secret put NAME`, or in .dev.vars locally):
+#   QUOTE_SECRET          signs quote tokens (required)
+#   SERVICE_TOKEN         optional bearer token the agent must send
+#   LALAMOVE_API_KEY
+#   LALAMOVE_API_SECRET
